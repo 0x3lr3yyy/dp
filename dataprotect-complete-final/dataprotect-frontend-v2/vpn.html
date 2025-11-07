@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Setup - DATAPROTECT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d1b3d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00ff88;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .vpn-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-configured {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .status-not-configured {
+            background: rgba(255, 136, 0, 0.2);
+            color: #ff8800;
+            border: 1px solid #ff8800;
+        }
+
+        .vpn-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .vpn-info p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .vpn-info strong {
+            color: #00ff88;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            margin-right: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #1e1e2e;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .instructions {
+            margin-top: 3rem;
+        }
+
+        .platform-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00ff88;
+            border-radius: 5px;
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #00ff88;
+            color: #1e1e2e;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff6666;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">DATAPROTECT</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="vpn.html">VPN Setup</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="vpn-card">
+            <h1>🔐 VPN Setup</h1>
+            <p style="color: #aaa; margin-bottom: 2rem;">Connect to the CTF network to access challenge machines</p>
+
+            <div id="status-section">
+                <div class="loading"></div> Loading VPN status...
+            </div>
+
+            <div id="vpn-info" style="display: none;">
+                <div class="vpn-info">
+                    <p><strong>Your VPN IP:</strong> <span id="vpn-ip">-</span></p>
+                    <p><strong>Network Range:</strong> 10.11.0.0/16</p>
+                    <p><strong>Status:</strong> <span id="vpn-status">Not Connected</span></p>
+                </div>
+
+                <button class="btn btn-primary" id="download-btn">
+                    📥 Download VPN Config
+                </button>
+                <button class="btn btn-secondary" id="regenerate-btn">
+                    🔄 Regenerate Config
+                </button>
+            </div>
+
+            <div id="not-configured" style="display: none;">
+                <p style="margin: 2rem 0;">You haven't generated a VPN configuration yet. Click below to generate one.</p>
+                <button class="btn btn-primary" id="generate-btn">
+                    ⚡ Generate VPN Config
+                </button>
+            </div>
+
+            <div id="error-section" style="display: none;"></div>
+        </div>
+
+        <div class="vpn-card instructions">
+            <h2 style="margin-bottom: 2rem;">📚 Setup Instructions</h2>
+            
+            <div class="platform-tabs">
+                <div class="tab active" data-platform="windows">Windows</div>
+                <div class="tab" data-platform="macos">macOS</div>
+                <div class="tab" data-platform="linux">Linux</div>
+                <div class="tab" data-platform="android">Android</div>
+                <div class="tab" data-platform="ios">iOS</div>
+            </div>
+
+            <div id="windows" class="tab-content active">
+                <ol class="steps">
+                    <li>Download and install WireGuard from <a href="https://www.wireguard.com/install/" target="_blank" style="color: #00ff88;">https://www.wireguard.com/install/</a></li>
+                    <li>Click "Add Tunnel" and select "Import tunnel(s) from file"</li>
+                    <li>Select the downloaded .conf file</li>
+                    <li>Click "Activate" to connect</li>
+                </ol>
+            </div>
+
+            <div id="macos" class="tab-content">
+                <ol class="steps">
+                    <li>Download and install WireGuard from the App Store</li>
+                    <li>Click "Import tunnel(s) from file"</li>
+                    <li>Select the downloaded .conf file</li>
+                    <li>Toggle the switch to connect</li>
+                </ol>
+            </div>
+
+            <div id="linux" class="tab-content">
+                <ol class="steps">
+                    <li>Install WireGuard: <code>sudo apt install wireguard</code></li>
+                    <li>Copy the .conf file to /etc/wireguard/</li>
+                    <li>Connect: <code>sudo wg-quick up dataprotect</code></li>
+                    <li>Disconnect: <code>sudo wg-quick down dataprotect</code></li>
+                </ol>
+            </div>
+
+            <div id="android" class="tab-content">
+                <ol class="steps">
+                    <li>Install WireGuard from Google Play Store</li>
+                    <li>Tap the + button and select "Import from file or archive"</li>
+                    <li>Select the downloaded .conf file</li>
+                    <li>Tap the toggle to connect</li>
+                </ol>
+            </div>
+
+            <div id="ios" class="tab-content">
+                <ol class="steps">
+                    <li>Install WireGuard from the App Store</li>
+                    <li>Tap "Add a tunnel" and select "Create from file or archive"</li>
+                    <li>Select the downloaded .conf file</li>
+                    <li>Toggle the switch to connect</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        const api = new APIClient();
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const platform = tab.dataset.platform;
+                document.getElementById(platform).classList.add('active');
+            });
+        });
+
+        // Load VPN status
+        async function loadStatus() {
+            try {
+                if (!api.isAuthenticated()) {
+                    showError('Please login to access VPN setup');
+                    return;
+                }
+
+                const data = await api.request('/vpn/status');
+                
+                if (data.configured) {
+                    document.getElementById('status-section').style.display = 'none';
+                    document.getElementById('vpn-info').style.display = 'block';
+                    document.getElementById('vpn-ip').textContent = data.ipAddress;
+                } else {
+                    document.getElementById('status-section').style.display = 'none';
+                    document.getElementById('not-configured').style.display = 'block';
+                }
+            } catch (error) {
+                showError('Failed to load VPN status: ' + error.message);
+            }
+        }
+
+        // Generate VPN config
+        document.getElementById('generate-btn')?.addEventListener('click', async () => {
+            try {
+                const btn = document.getElementById('generate-btn');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading"></span> Generating...';
+                
+                await api.request('/vpn/generate', { method: 'POST' });
+                
+                alert('VPN configuration generated successfully!');
+                location.reload();
+            } catch (error) {
+                showError('Failed to generate VPN config: ' + error.message);
+            }
+        });
+
+        // Download VPN config
+        document.getElementById('download-btn')?.addEventListener('click', async () => {
+            try {
+                const token = localStorage.getItem('dataprotect_token');
+                const url = `${api.baseURL}/vpn/download`;
+                
+                // Create a temporary link and click it
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'dataprotect.conf';
+                a.style.display = 'none';
+                
+                // Add authorization header via fetch and blob
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Download failed');
+                
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                a.href = blobUrl;
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                showError('Failed to download VPN config: ' + error.message);
+            }
+        });
+
+        // Regenerate VPN config
+        document.getElementById('regenerate-btn')?.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to regenerate your VPN configuration? Your current config will be invalidated.')) {
+                return;
+            }
+            
+            try {
+                await api.request('/vpn/config', { method: 'DELETE' });
+                await api.request('/vpn/generate', { method: 'POST' });
+                
+                alert('VPN configuration regenerated successfully!');
+                location.reload();
+            } catch (error) {
+                showError('Failed to regenerate VPN config: ' + error.message);
+            }
+        });
+
+        function showError(message) {
+            const errorSection = document.getElementById('error-section');
+            errorSection.innerHTML = `<div class="error">${message}</div>`;
+            errorSection.style.display = 'block';
+            document.getElementById('status-section').style.display = 'none';
+        }
+
+        // Load status on page load
+        loadStatus();
+    </script>
+</body>
+</html>

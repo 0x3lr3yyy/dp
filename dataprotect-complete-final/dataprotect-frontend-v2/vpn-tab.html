@@ -1,0 +1,330 @@
+<!-- VPN Tab Component (TryHackMe Style) -->
+<!-- Add this to your header navigation -->
+
+<style>
+.vpn-tab {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.vpn-button {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(215, 38, 61, 0.3);
+  transition: all 0.2s ease;
+}
+
+.vpn-button:hover {
+  background: var(--red-700);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(215, 38, 61, 0.4);
+}
+
+.vpn-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 2s infinite;
+}
+
+.vpn-status.disconnected {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.vpn-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.vpn-modal.active {
+  display: flex;
+}
+
+.vpn-modal-content {
+  background: var(--onyx);
+  color: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.vpn-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.vpn-modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-family: 'Russo One', sans-serif;
+}
+
+.vpn-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.vpn-close:hover {
+  opacity: 1;
+}
+
+.vpn-info {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.vpn-info p {
+  margin: 0 0 12px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.vpn-info p:last-child {
+  margin-bottom: 0;
+}
+
+.vpn-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.vpn-actions .btn {
+  flex: 1;
+}
+
+.vpn-steps {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vpn-steps h3 {
+  font-size: 16px;
+  margin: 0 0 12px;
+  opacity: 0.8;
+}
+
+.vpn-steps ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.vpn-steps li {
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.vpn-download-link {
+  color: var(--red);
+  text-decoration: underline;
+}
+</style>
+
+<!-- VPN Tab Button -->
+<div class="vpn-tab">
+  <button class="vpn-button" onclick="openVPNModal()">
+    <span class="vpn-status disconnected" id="vpn-status"></span>
+    <i class="fas fa-network-wired"></i>
+    <span id="vpn-button-text">Connect VPN</span>
+  </button>
+</div>
+
+<!-- VPN Modal -->
+<div class="vpn-modal" id="vpn-modal">
+  <div class="vpn-modal-content">
+    <div class="vpn-modal-header">
+      <h2><i class="fas fa-shield-alt"></i> VPN Access</h2>
+      <button class="vpn-close" onclick="closeVPNModal()">&times;</button>
+    </div>
+
+    <div class="vpn-info">
+      <p><strong>Why do I need VPN?</strong></p>
+      <p>To access the challenge machines, you need to connect to our secure network using WireGuard VPN.</p>
+      <p><strong>Your VPN IP:</strong> <span id="vpn-ip">Not generated yet</span></p>
+    </div>
+
+    <div class="vpn-actions">
+      <button class="btn btn-primary" onclick="generateVPNConfig()" id="generate-vpn-btn">
+        <i class="fas fa-download"></i> Download Config
+      </button>
+      <button class="btn btn-ghost" onclick="testVPNConnection()" id="test-vpn-btn">
+        <i class="fas fa-check"></i> Test Connection
+      </button>
+    </div>
+
+    <div class="vpn-steps">
+      <h3>Quick Setup:</h3>
+      <ol>
+        <li>Download <a href="https://www.wireguard.com/install/" target="_blank" class="vpn-download-link">WireGuard</a></li>
+        <li>Click "Download Config" above</li>
+        <li>Import the .conf file in WireGuard</li>
+        <li>Click "Activate" in WireGuard</li>
+        <li>Start machines and access them via IP!</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<script>
+// VPN Modal Functions
+function openVPNModal() {
+  if (!api.isAuthenticated()) {
+    alert('Please login first to access VPN');
+    window.location.href = 'login.html';
+    return;
+  }
+  document.getElementById('vpn-modal').classList.add('active');
+  checkVPNStatus();
+}
+
+function closeVPNModal() {
+  document.getElementById('vpn-modal').classList.remove('active');
+}
+
+// Close modal on outside click
+document.getElementById('vpn-modal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'vpn-modal') {
+    closeVPNModal();
+  }
+});
+
+// Generate VPN Config
+async function generateVPNConfig() {
+  const btn = document.getElementById('generate-vpn-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+  try {
+    const response = await fetch(`${api.API_BASE_URL}/vpn/generate`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${api.getToken()}`
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to generate VPN config');
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'dataprotect-vpn.conf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Downloaded!';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-download"></i> Download Config';
+    }, 2000);
+
+    // Update VPN IP
+    checkVPNStatus();
+
+  } catch (error) {
+    alert('Failed to generate VPN config: ' + error.message);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-download"></i> Download Config';
+  }
+}
+
+// Test VPN Connection
+async function testVPNConnection() {
+  const btn = document.getElementById('test-vpn-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+
+  try {
+    const response = await fetch(`${api.API_BASE_URL}/vpn/test`, {
+      headers: {
+        'Authorization': `Bearer ${api.getToken()}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.connected) {
+      document.getElementById('vpn-status').classList.remove('disconnected');
+      document.getElementById('vpn-button-text').textContent = 'VPN Connected';
+      alert('✓ VPN is connected!');
+    } else {
+      alert('✗ VPN is not connected. Please activate WireGuard.');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Test Connection';
+
+  } catch (error) {
+    alert('Failed to test connection: ' + error.message);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Test Connection';
+  }
+}
+
+// Check VPN Status
+async function checkVPNStatus() {
+  try {
+    const response = await fetch(`${api.API_BASE_URL}/vpn/status`, {
+      headers: {
+        'Authorization': `Bearer ${api.getToken()}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.vpnConfig) {
+      document.getElementById('vpn-ip').textContent = data.vpnConfig.clientIp || 'Not assigned';
+      
+      if (data.connected) {
+        document.getElementById('vpn-status').classList.remove('disconnected');
+        document.getElementById('vpn-button-text').textContent = 'VPN Connected';
+      }
+    }
+
+  } catch (error) {
+    console.error('Failed to check VPN status:', error);
+  }
+}
+
+// Check VPN status on page load
+if (api.isAuthenticated()) {
+  checkVPNStatus();
+}
+</script>

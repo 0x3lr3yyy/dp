@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CyberSec Academy  Preview</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --red-050:#F7D4D8;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8; /* page background */
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+      --focus:#0B5FFF;
+    }
+    /* Single theme (dark-leaning) */
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--snow);
+      line-height:1.5;
+    }
+    a{color:var(--red); text-decoration:none}
+    a:focus{outline:3px solid var(--focus); outline-offset:2px}
+    .container{max-width:1120px; margin:0 auto; padding:0 20px}
+    /* Header */
+    .header{
+      background:transparent; /* fully transparent */
+      color:var(--white);
+      position:absolute;
+      top:0; left:0; right:0;
+      width:100%;
+      z-index:2;
+    }
+    .header-inner{
+      display:grid; grid-template-columns:auto 1fr; align-items:center;
+      padding:14px 0; column-gap:20px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:0; color:var(--white); font-weight:700;
+    }
+    .brand-logo-img{ height:44px; width:auto; display:block; border-radius:6px }
+    .nav{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:18px; width:100%}
+    .nav-center{display:flex; gap:72px; justify-content:center}
+    .nav-actions{display:flex; gap:12px; justify-content:flex-end}
+    .nav a{color:#fff; opacity:1}
+    .nav a:hover{opacity:1; text-decoration:underline}
+    .header .btn, .header .nav a{ text-shadow:0 1px 2px rgba(0,0,0,.45) }
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid transparent;
+      font-weight:600; transition:all .15s ease;
+    }
+    .btn-primary{background:var(--red); color:#fff; border-color:var(--red)}
+    .btn-primary:hover{background:var(--red-700); border-color:var(--red-700)}
+    .btn-ghost{background:transparent; color:#fff; border-color:#fff}
+    .btn-ghost:hover{background:rgba(255,255,255,.08)}
+    /* Hero */
+    .hero{background:var(--onyx); color:#fff; padding:200px 0 120px; position:relative; min-height:90vh}
+    .hero .container{position:relative; z-index:1}
+    .hero h1{
+      font-size:56px; line-height:1.05; margin:0 0 10px;
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      text-transform:uppercase; letter-spacing:2px;
+      text-shadow:0 0 6px rgba(215,38,61,.6), 0 0 18px rgba(215,38,61,.35);
+    }
+    .hero p{color:#EDEDEF; margin:0 0 18px; max-width:720px}
+    .hero-cta{display:flex; gap:12px; flex-wrap:wrap}
+    /* Pathways */
+    .section{padding:36px 0}
+    .section h2{font-size:24px; margin:0 0 14px}
+    .grid{display:grid; gap:14px}
+    .grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media (max-width: 1024px){ .grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width: 640px){ .grid.cols-4{grid-template-columns:1fr}}
+    .tile{
+      background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+      will-change:transform;
+      position:relative; overflow:hidden;
+    }
+    [data-theme="dark"] .tile{ background:#1A1A1D }
+    .tile:hover, .tile:focus-within{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,.25); border-color:var(--red)}
+    .tile:after{content:""; position:absolute; inset:auto 0 0 0; height:3px; background:linear-gradient(90deg, rgba(215,38,61,.8), rgba(179,30,49,.8)); opacity:.9}
+    .tile-title{font-weight:700; margin-bottom:6px}
+    .tile-desc{color:var(--muted)}
+    /* Cards */
+    .card{background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+      will-change:transform; position:relative; overflow:hidden}
+    [data-theme="dark"] .card{ background:#1A1A1D }
+    .card:hover, .card:focus-within{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,.25); border-color:var(--red)}
+    .card:after{content:""; position:absolute; inset:auto 0 0 0; height:3px; background:linear-gradient(90deg, rgba(215,38,61,.8), rgba(179,30,49,.8)); opacity:.9}
+    .card .title{font-weight:700; margin-bottom:6px}
+    .card .meta{color:var(--muted); margin-bottom:10px}
+    .card a{font-weight:600}
+    .card a:hover{ text-decoration:underline }
+    /* Reveal on scroll */
+    @media (prefers-reduced-motion: no-preference){
+      .reveal{ opacity:0; transform:translateY(14px)}
+      .reveal.in{ opacity:1; transform:none; transition:opacity .45s ease, transform .45s ease}
+    }
+    /* CTA band */
+    .band{
+      background:#fff; border:1px solid var(--border); border-radius:12px; padding:20px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    }
+    [data-theme="dark"] .band{ background:#1A1A1D }
+    /* Footer */
+    .footer{background:#0E0E10; color:#fff; padding:28px 0; margin-top:28px}
+    .footer a{color:#fff}
+    .muted{color:var(--muted)}
+    /* Chips */
+    .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px;
+      background:var(--red-050); color:var(--ink); border:1px solid var(--border); font-weight:600;
+    }
+    .chip-dot{width:8px; height:8px; background:var(--red); border-radius:999px}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="#" aria-label="CyberSec Academy Home">
+        <img class="brand-logo-img" src="file:///C:/Users/pc/Downloads/b59278bb-1ac7-4782-ab7f-7227273563cf.png" alt="" />
+      </a>
+      <nav class="nav" aria-label="Main">
+        <div class="nav-center">
+          <a href="#">Courses</a>
+          <a href="#">Catalog</a>
+          <a href="#">About</a>
+        </div>
+        <div class="nav-actions">
+          <a class="btn btn-ghost" href="#">Sign in</a>
+          <a class="btn btn-primary" href="#">Get started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="vanta-hero">
+    <div class="container">
+      <div class="chip" style="margin-bottom:12px;">
+        <span class="chip-dot" aria-hidden="true"></span>
+        DataProtect Cyber Security Academy
+      </div>
+      <h1>Join a global community learning cybersecurity</h1>
+      <p>Explore pathways in network security, cloud, threat intelligence, and application security with handson courses and modern content.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#">Browse courses</a>
+        <a class="btn btn-ghost" href="#">View catalog</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pathways -->
+  <section class="section">
+    <div class="container">
+      <h2>Pathways</h2>
+      <div class="grid cols-4">
+        <div class="tile reveal">
+          <div class="tile-title">Network Security</div>
+          <div class="tile-desc">Firewalls, IDS/IPS, zero trust.</div>
+        </div>
+        <div class="tile reveal">
+          <div class="tile-title">Cloud Security</div>
+          <div class="tile-desc">IAM, Kubernetes, workload hardening.</div>
+        </div>
+        <div class="tile reveal">
+          <div class="tile-title">Threat Intelligence</div>
+          <div class="tile-desc">Adversaries, TTPs, detection.</div>
+        </div>
+        <div class="tile reveal">
+          <div class="tile-title">Application Security</div>
+          <div class="tile-desc">Secure SDLC, SAST/DAST, supply chain.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending Courses -->
+  <section class="section">
+    <div class="container">
+      <h2>Trending Courses</h2>
+      <div class="grid cols-4">
+        <article class="card reveal">
+          <div class="title">Intro to Network Defense</div>
+          <div class="meta">12 hours  Beginner</div>
+          <a href="#">View course</a>
+        </article>
+        <article class="card reveal">
+          <div class="title">Cloud IAM Essentials</div>
+          <div class="meta">23 hours  Beginner</div>
+          <a href="#">View course</a>
+        </article>
+        <article class="card reveal">
+          <div class="title">Threat Hunting Fundamentals</div>
+          <div class="meta">23 hours  Intermediate</div>
+          <a href="#">View course</a>
+        </article>
+        <article class="card reveal">
+          <div class="title">Secure Coding for Web</div>
+          <div class="meta">12 hours  Beginner</div>
+          <a href="#">View course</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="band">
+        <div>
+          <div class="title" style="font-weight:700; margin-bottom:6px;">Get started today</div>
+          <div class="muted">Create your free account and start learning.</div>
+        </div>
+        <div>
+          <a class="btn btn-primary" href="#">Create account</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container" style="display:flex; gap:24px; justify-content:space-between; flex-wrap:wrap;">
+      <div>
+        <div style="font-weight:700; margin-bottom:6px;">CyberSec Academy</div>
+        <div class="muted" style="color:#B9BBC6;">Learn cybersecurity. Handson, modern, communitydriven.</div>
+      </div>
+      <div>
+        <a href="#">Courses</a><br/>
+        <a href="#">Catalog</a><br/>
+        <a href="#">Contact</a><br/>
+        <a href="#" class="muted">Privacy</a>  <a href="#" class="muted">Terms</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Vanta.js Clouds background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
+  <script>
+    (function(){
+      var vantaEffect;
+      function initVanta(){
+        if (vantaEffect) return;
+        vantaEffect = VANTA.CLOUDS({
+          el: "#vanta-hero",
+          backgroundAlpha: 1.0,
+          backgroundColor: 0x000000,
+          cloudColor: 11609638,
+          cloudShadowColor: 0x000000,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          mouseControls: true,
+          mouseEase: true,
+          scale: 3.0,
+          scaleMobile: 12.0,
+          skyColor: 0x000000,
+          speed: 3.0,
+          sunColor: 0x000000,
+          sunGlareColor: 0x000000,
+          sunlightColor: 0x000000,
+          touchControls: true
+        });
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive'){
+        initVanta();
+      } else {
+        document.addEventListener('DOMContentLoaded', initVanta);
+      }
+      window.addEventListener('unload', function(){
+        if (vantaEffect && vantaEffect.destroy) vantaEffect.destroy();
+      });
+      // Reveal on scroll for tiles and cards
+      var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+      if ('IntersectionObserver' in window){
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              entry.target.classList.add('in');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        els.forEach(function(el){ io.observe(el); });
+      } else {
+        els.forEach(function(el){ el.classList.add('in'); });
+      }
+    })();
+  </script>
+</body>
+</html>

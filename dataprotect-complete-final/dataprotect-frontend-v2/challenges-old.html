@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>All Challenges - DATAPROTECT</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:Inter, system-ui, sans-serif;
+      background:var(--onyx);
+      color:var(--white);
+      line-height:1.6;
+    }
+    .navbar{
+      background:rgba(26,26,29,0.95);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      padding:1rem 2rem;
+      position:sticky;
+      top:0;
+      z-index:100;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .logo{
+      font-family:'Russo One', sans-serif;
+      font-size:24px;
+      color:var(--red);
+      text-decoration:none;
+    }
+    .nav-links{
+      display:flex;
+      gap:2rem;
+      align-items:center;
+    }
+    .nav-links a{
+      color:var(--white);
+      text-decoration:none;
+      font-weight:500;
+      transition:color .2s;
+    }
+    .nav-links a:hover{
+      color:var(--red);
+    }
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:3rem 2rem;
+    }
+    h1{
+      font-family:'Russo One', sans-serif;
+      font-size:48px;
+      margin-bottom:1rem;
+    }
+    .filters{
+      display:flex;
+      gap:1rem;
+      margin:2rem 0;
+      flex-wrap:wrap;
+    }
+    .filter-btn{
+      padding:0.75rem 1.5rem;
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.2);
+      color:var(--white);
+      border-radius:8px;
+      cursor:pointer;
+      transition:all .2s;
+      font-weight:600;
+    }
+    .filter-btn:hover, .filter-btn.active{
+      background:var(--red);
+      border-color:var(--red);
+    }
+    .challenges-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+      gap:2rem;
+      margin-top:2rem;
+    }
+    .challenge-card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px;
+      padding:1.5rem;
+      cursor:pointer;
+      transition:all .3s;
+    }
+    .challenge-card:hover{
+      transform:translateY(-5px);
+      border-color:var(--red);
+      box-shadow:0 10px 30px rgba(215,38,61,0.3);
+    }
+    .challenge-title{
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:0.5rem;
+    }
+    .challenge-meta{
+      display:flex;
+      gap:1rem;
+      margin:0.75rem 0;
+      flex-wrap:wrap;
+    }
+    .badge{
+      padding:0.25rem 0.75rem;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+    .badge-easy{background:#22c55e;color:#000}
+    .badge-medium{background:#f59e0b;color:#000}
+    .badge-hard{background:#ef4444;color:#fff}
+    .challenge-desc{
+      color:var(--muted);
+      font-size:14px;
+      margin-top:1rem;
+    }
+    .challenge-category{
+      color:var(--red);
+      font-size:13px;
+      font-weight:600;
+    }
+    .loading{
+      text-align:center;
+      padding:4rem;
+      color:var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">DATAPROTECT</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <div id="nav-actions"></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>All Challenges</h1>
+    <p style="color:var(--muted); font-size:18px">Browse all available CTF challenges</p>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Easy">Easy</button>
+      <button class="filter-btn" data-filter="Medium">Medium</button>
+      <button class="filter-btn" data-filter="Hard">Hard</button>
+    </div>
+
+    <div id="challenges-grid" class="challenges-grid">
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+        <p>Loading challenges...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    let allChallenges = [];
+    let currentFilter = 'all';
+
+    // Update navigation
+    function updateNav() {
+      const navActions = document.getElementById('nav-actions');
+      if (api.isAuthenticated()) {
+        const user = api.getCurrentUser();
+        navActions.innerHTML = `<span style="color:var(--muted)">Hi, ${user.username}</span> <a href="#" onclick="handleLogout()">Logout</a>`;
+      } else {
+        navActions.innerHTML = `<a href="login.html">Sign in</a> <a href="register.html" style="background:var(--red); padding:0.5rem 1rem; border-radius:8px">Get started</a>`;
+      }
+    }
+
+    // Load challenges
+    async function loadChallenges() {
+      try {
+        const data = await api.getChallenges();
+        allChallenges = data.challenges || [];
+        renderChallenges();
+      } catch (error) {
+        console.error('Error loading challenges:', error);
+        document.getElementById('challenges-grid').innerHTML = '<p class="loading">Failed to load challenges</p>';
+      }
+    }
+
+    // Render challenges
+    function renderChallenges() {
+      const grid = document.getElementById('challenges-grid');
+      
+      let filtered = allChallenges;
+      if (currentFilter !== 'all') {
+        filtered = allChallenges.filter(ch => ch.difficulty === currentFilter);
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p class="loading">No challenges found</p>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(ch => {
+        const diffClass = ch.difficulty === 'Easy' ? 'badge-easy' : 
+                         ch.difficulty === 'Medium' ? 'badge-medium' : 'badge-hard';
+        return `
+          <div class="challenge-card" onclick="window.location.href='challenge.html?id=${ch.id}'">
+            <div class="challenge-category">${ch.category_name || 'Uncategorized'}</div>
+            <div class="challenge-title">${ch.title}</div>
+            <div class="challenge-meta">
+              <span class="badge ${diffClass}">${ch.difficulty}</span>
+              <span style="color:var(--muted)">${ch.points} points</span>
+            </div>
+            <div class="challenge-desc">${ch.description.substring(0, 120)}...</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderChallenges();
+      });
+    });
+
+    // Logout
+    window.handleLogout = function() {
+      api.logout();
+      window.location.href = 'index.html';
+    };
+
+    // Init
+    updateNav();
+    loadChallenges();
+  </script>
+</body>
+</html>

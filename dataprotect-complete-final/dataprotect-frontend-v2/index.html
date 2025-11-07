@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DATAPROTECT - CTF Platform</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --red-050:#F7D4D8;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+      --focus:#0B5FFF;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--snow);
+      line-height:1.5;
+    }
+    a{color:var(--red); text-decoration:none}
+    a:focus{outline:3px solid var(--focus); outline-offset:2px}
+    .container{max-width:1120px; margin:0 auto; padding:0 20px}
+    /* Header */
+    .header{
+      background:transparent;
+      color:var(--white);
+      position:absolute;
+      top:0; left:0; right:0;
+      width:100%;
+      z-index:2;
+    }
+    .header-inner{
+      display:grid; grid-template-columns:auto 1fr; align-items:center;
+      padding:14px 0; column-gap:20px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:0; color:var(--white); font-weight:700;
+      font-family:'Russo One', sans-serif; font-size:24px;
+    }
+    .nav{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:18px; width:100%}
+    .nav-center{display:flex; gap:72px; justify-content:center}
+    .nav-actions{display:flex; gap:12px; justify-content:flex-end}
+    .nav a{color:#fff; opacity:1}
+    .nav a:hover{opacity:1; text-decoration:underline}
+    .header .btn, .header .nav a{ text-shadow:0 1px 2px rgba(0,0,0,.45) }
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid transparent;
+      font-weight:600; transition:all .15s ease; cursor:pointer;
+    }
+    .btn-primary{background:var(--red); color:#fff; border-color:var(--red)}
+    .btn-primary:hover{background:var(--red-700); border-color:var(--red-700)}
+    .btn-ghost{background:transparent; color:#fff; border-color:#fff}
+    .btn-ghost:hover{background:rgba(255,255,255,.08)}
+    /* Hero */
+    .hero{background:var(--onyx); color:#fff; padding:200px 0 120px; position:relative; min-height:90vh}
+    .hero .container{position:relative; z-index:1}
+    .hero h1{
+      font-size:56px; line-height:1.05; margin:0 0 10px;
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      text-transform:uppercase; letter-spacing:2px;
+      text-shadow:0 0 6px rgba(215,38,61,.6), 0 0 18px rgba(215,38,61,.35);
+    }
+    .hero p{color:#EDEDEF; margin:0 0 18px; max-width:720px}
+    .hero-cta{display:flex; gap:12px; flex-wrap:wrap}
+    /* Pathways */
+    .section{padding:36px 0}
+    .section h2{font-size:24px; margin:0 0 14px}
+    .grid{display:grid; gap:14px}
+    .grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media (max-width: 1024px){ .grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width: 640px){ .grid.cols-4{grid-template-columns:1fr}}
+    .tile{
+      background:#fff; border:2px solid var(--border); border-radius:12px; padding:24px;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+      will-change:transform;
+      position:relative; overflow:hidden;
+      cursor:pointer;
+      min-height:180px;
+      display:flex;
+      flex-direction:column;
+    }
+    .tile:hover, .tile:focus-within{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(215,38,61,.3); border-color:var(--red)}
+    .tile:after{content:""; position:absolute; inset:auto 0 0 0; height:4px; background:linear-gradient(90deg, var(--red), var(--red-700)); opacity:1}
+    .tile-icon{font-size:36px; margin-bottom:16px; color:var(--red)}
+    .tile-title{font-weight:700; margin-bottom:8px; font-size:18px; color:var(--ink)}
+    .tile-desc{color:var(--muted); font-size:14px; line-height:1.5; flex-grow:1}
+    .tile-count{color:var(--red); font-size:13px; margin-top:12px; font-weight:600}
+    /* Cards */
+    .card{background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+      will-change:transform; position:relative; overflow:hidden; cursor:pointer}
+    .card:hover, .card:focus-within{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,.25); border-color:var(--red)}
+    .card:after{content:""; position:absolute; inset:auto 0 0 0; height:3px; background:linear-gradient(90deg, rgba(215,38,61,.8), rgba(179,30,49,.8)); opacity:.9}
+    .card .title{font-weight:700; margin-bottom:6px}
+    .card .meta{color:var(--muted); margin-bottom:10px}
+    .card a{font-weight:600}
+    .card a:hover{ text-decoration:underline }
+    /* Reveal on scroll */
+    @media (prefers-reduced-motion: no-preference){
+      .reveal{ opacity:0; transform:translateY(14px)}
+      .reveal.in{ opacity:1; transform:none; transition:opacity .45s ease, transform .45s ease}
+    }
+    /* Footer */
+    .footer{background:#0E0E10; color:#fff; padding:28px 0; margin-top:28px}
+    .footer a{color:#fff}
+    .muted{color:var(--muted)}
+    /* Chips */
+    .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px;
+      background:var(--red-050); color:var(--ink); border:1px solid var(--border); font-weight:600;
+    }
+    .chip-dot{width:8px; height:8px; background:var(--red); border-radius:999px}
+    /* Table */
+    table{width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden}
+    thead{background:var(--red); color:#fff}
+    th{padding:12px; text-align:left; font-weight:700}
+    td{padding:12px; border-top:1px solid var(--border)}
+    tbody tr:hover{background:var(--red-050)}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">DATAPROTECT</a>
+      <nav class="nav">
+        <div class="nav-center">
+          <a href="index.html">Home</a>
+          <a href="challenges.html">Challenges</a>
+          <a href="leaderboard.html">Leaderboard</a>
+          <a href="vpn.html">VPN Setup</a>
+        </div>
+        <div class="nav-actions" id="nav-actions">
+          <a class="btn btn-ghost" href="login.html">Sign in</a>
+          <a class="btn btn-primary" href="register.html">Get started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="vanta-hero">
+    <div class="container">
+      <div class="chip" style="margin-bottom:12px;">
+        <span class="chip-dot"></span>
+        DataProtect Cyber Security Platform
+      </div>
+      <h1>Master Cybersecurity Through Practice</h1>
+      <p>Join thousands of security professionals learning through hands-on CTF challenges. Test your skills in web exploitation, cryptography, reverse engineering, and more.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="challenges.html">Browse Challenges</a>
+        <a class="btn btn-ghost" href="leaderboard.html">View Leaderboard</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Categories -->
+  <section class="section">
+    <div class="container">
+      <h2>Challenge Categories</h2>
+      <div class="grid cols-4" id="categories-grid">
+        <div class="tile reveal">
+          <div class="tile-title">Loading...</div>
+          <div class="tile-desc">Please wait</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending Challenges -->
+  <section class="section">
+    <div class="container">
+      <h2>Trending Challenges</h2>
+      <div class="grid cols-4" id="challenges-grid">
+        <div class="card reveal">
+          <div class="title">Loading...</div>
+          <div class="meta">Please wait</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leaderboard -->
+  <section class="section">
+    <div class="container">
+      <h2>Top Players</h2>
+      <table id="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Points</th>
+            <th>Solved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="text-align:center; color:var(--muted)">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container" style="text-align:center">
+      <p class="muted">&copy; 2025 dataprotect</p>
+    </div>
+  </footer>
+
+  <!-- VANTA.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

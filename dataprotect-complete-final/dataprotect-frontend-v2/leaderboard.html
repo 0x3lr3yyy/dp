@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Leaderboard - DATAPROTECT</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --red-050:#F7D4D8;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+      --focus:#0B5FFF;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--snow);
+      line-height:1.5;
+    }
+    a{color:var(--red); text-decoration:none}
+    .container{max-width:1120px; margin:0 auto; padding:0 20px}
+    /* Header */
+    .header{
+      background:var(--onyx);
+      color:var(--white);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+    .header-inner{
+      display:grid; grid-template-columns:auto 1fr; align-items:center;
+      padding:14px 0; column-gap:20px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:0; color:var(--white); font-weight:700;
+      font-family:'Russo One', sans-serif; font-size:24px;
+    }
+    .nav{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:18px; width:100%}
+    .nav-center{display:flex; gap:72px; justify-content:center}
+    .nav-actions{display:flex; gap:12px; justify-content:flex-end}
+    .nav a{color:#fff; opacity:1}
+    .nav a:hover{opacity:1; text-decoration:underline}
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid transparent;
+      font-weight:600; transition:all .15s ease; cursor:pointer;
+    }
+    .btn-primary{background:var(--red); color:#fff; border-color:var(--red)}
+    .btn-primary:hover{background:var(--red-700); border-color:var(--red-700)}
+    .btn-ghost{background:transparent; color:#fff; border-color:#fff}
+    .btn-ghost:hover{background:rgba(255,255,255,.08)}
+    /* Page Header */
+    .page-header{
+      background:var(--onyx);
+      color:#fff;
+      padding:60px 0 40px;
+    }
+    .page-header h1{
+      font-size:42px;
+      font-family:'Russo One', sans-serif;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      margin:0 0 10px;
+      text-shadow:0 0 6px rgba(215,38,61,.6), 0 0 18px rgba(215,38,61,.35);
+    }
+    .page-header p{color:#EDEDEF; margin:0}
+    /* Table */
+    .section{padding:36px 0}
+    .table-container{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+      position:relative;
+    }
+    .table-container:after{content:""; position:absolute; inset:auto 0 0 0; height:3px; background:linear-gradient(90deg, rgba(215,38,61,.8), rgba(179,30,49,.8)); opacity:.9}
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+    thead{
+      background:var(--red);
+      color:#fff;
+    }
+    th{
+      padding:16px;
+      text-align:left;
+      font-weight:700;
+      text-transform:uppercase;
+      font-size:14px;
+      letter-spacing:0.5px;
+    }
+    td{
+      padding:16px;
+      border-top:1px solid var(--border);
+    }
+    tbody tr{
+      transition:background .2s;
+    }
+    tbody tr:hover{
+      background:var(--red-050);
+    }
+    .rank-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:var(--border);
+      font-weight:700;
+      font-size:18px;
+    }
+    .rank-1{
+      background:linear-gradient(135deg, #FFD700, #FFA500);
+      color:#000;
+    }
+    .rank-2{
+      background:linear-gradient(135deg, #C0C0C0, #808080);
+      color:#000;
+    }
+    .rank-3{
+      background:linear-gradient(135deg, #CD7F32, #8B4513);
+      color:#fff;
+    }
+    /* Footer */
+    .footer{background:#0E0E10; color:#fff; padding:28px 0; margin-top:28px}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">DATAPROTECT</a>
+      <nav class="nav">
+        <div class="nav-center">
+          <a href="index.html">Home</a>
+          <a href="challenges.html">Challenges</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </div>
+        <div class="nav-actions" id="nav-actions">
+          <a class="btn btn-ghost" href="login.html">Sign in</a>
+          <a class="btn btn-primary" href="register.html">Get started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Leaderboard</h1>
+      <p>Top players ranked by points</p>
+    </div>
+  </section>
+
+  <!-- Leaderboard -->
+  <section class="section">
+    <div class="container">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player</th>
+              <th>Points</th>
+              <th>Challenges Solved</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="4" style="text-align:center; color:var(--muted); padding:40px">
+                <i class="fas fa-spinner fa-spin fa-2x"></i>
+                <p>Loading leaderboard...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container" style="text-align:center">
+      <p class="muted">&copy; 2025 dataprotect</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script>
+    // Update navigation
+    function updateNav() {
+      const navActions = document.getElementById('nav-actions');
+      if (api.isAuthenticated()) {
+        const user = api.getCurrentUser();
+        navActions.innerHTML = `<span style="color:var(--muted)">Hi, ${user.username}</span> <a href="#" onclick="handleLogout()" style="color:#fff">Logout</a>`;
+      } else {
+        navActions.innerHTML = `<a class="btn btn-ghost" href="login.html">Sign in</a> <a class="btn btn-primary" href="register.html">Get started</a>`;
+      }
+    }
+
+    // Load leaderboard
+    async function loadLeaderboard() {
+      try {
+        const data = await api.getLeaderboard(100);
+        const leaderboard = data.leaderboard || [];
+        
+        const tbody = document.getElementById('leaderboard-body');
+        
+        if (leaderboard.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:40px">No players yet</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = leaderboard.map((player, index) => {
+          const rank = index + 1;
+          const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+          return `
+            <tr>
+              <td><span class="rank-badge ${rankClass}">${rank}</span></td>
+              <td><strong>${player.username}</strong></td>
+              <td>${player.total_points || 0}</td>
+              <td>${player.challenges_solved || 0}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        document.getElementById('leaderboard-body').innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:40px">Failed to load leaderboard</td></tr>';
+      }
+    }
+
+    // Logout
+    window.handleLogout = function() {
+      api.logout();
+      window.location.href = 'index.html';
+    };
+
+    // Init
+    updateNav();
+    loadLeaderboard();
+  </script>
+</body>
+</html>

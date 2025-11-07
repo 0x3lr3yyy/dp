@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Challenge - DATAPROTECT</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --red-050:#F7D4D8;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+      --focus:#0B5FFF;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--snow);
+      line-height:1.5;
+    }
+    a{color:var(--red); text-decoration:none}
+    .container{max-width:1120px; margin:0 auto; padding:0 20px}
+    /* Header */
+    .header{
+      background:var(--onyx);
+      color:var(--white);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+    .header-inner{
+      display:grid; grid-template-columns:auto 1fr; align-items:center;
+      padding:14px 0; column-gap:20px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:0; color:var(--white); font-weight:700;
+      font-family:'Russo One', sans-serif; font-size:24px;
+    }
+    .nav{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:18px; width:100%}
+    .nav-center{display:flex; gap:72px; justify-content:center}
+    .nav-actions{display:flex; gap:12px; justify-content:flex-end}
+    .nav a{color:#fff; opacity:1}
+    .nav a:hover{opacity:1; text-decoration:underline}
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid transparent;
+      font-weight:600; transition:all .15s ease; cursor:pointer;
+    }
+    .btn-primary{background:var(--red); color:#fff; border-color:var(--red)}
+    .btn-primary:hover{background:var(--red-700); border-color:var(--red-700)}
+    .btn-ghost{background:transparent; color:#fff; border-color:#fff}
+    .btn-ghost:hover{background:rgba(255,255,255,.08)}
+    .btn:disabled{opacity:0.5; cursor:not-allowed}
+    /* Page Header */
+    .page-header{
+      background:var(--onyx);
+      color:#fff;
+      padding:60px 0 40px;
+    }
+    .page-header h1{
+      font-size:42px;
+      font-family:'Russo One', sans-serif;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      margin:0 0 10px;
+      text-shadow:0 0 6px rgba(215,38,61,.6), 0 0 18px rgba(215,38,61,.35);
+    }
+    .page-header .meta{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:12px;
+    }
+    .badge{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+    .badge-easy{background:#22c55e; color:#000}
+    .badge-medium{background:#f59e0b; color:#000}
+    .badge-hard{background:#ef4444; color:#fff}
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      margin-bottom:16px;
+      opacity:0.8;
+    }
+    .back-link:hover{opacity:1}
+    /* Sections */
+    .section{padding:36px 0}
+    .card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:24px;
+      margin-bottom:20px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:after{content:""; position:absolute; inset:auto 0 0 0; height:3px; background:linear-gradient(90deg, rgba(215,38,61,.8), rgba(179,30,49,.8)); opacity:.9}
+    .card h2{
+      font-size:20px;
+      margin:0 0 16px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .card p{line-height:1.8; color:var(--ink)}
+    /* Machine */
+    .machine-status{
+      background:var(--red-050);
+      border:1px solid var(--red);
+      border-radius:8px;
+      padding:16px;
+      margin:16px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:16px;
+    }
+    .machine-ip{
+      font-family:monospace;
+      font-size:18px;
+      font-weight:700;
+      color:var(--red);
+    }
+    .timer{
+      font-family:monospace;
+      font-size:18px;
+      font-weight:700;
+      color:#22c55e;
+    }
+    /* Input */
+    .input-group{
+      display:flex;
+      gap:12px;
+      margin-top:16px;
+    }
+    .input-group input{
+      flex:1;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-size:16px;
+      font-family:monospace;
+    }
+    .input-group input:focus{
+      outline:none;
+      border-color:var(--red);
+    }
+    /* Alert */
+    .alert{
+      padding:12px;
+      border-radius:8px;
+      margin-top:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .alert-success{
+      background:rgba(34,197,94,0.2);
+      border:1px solid #22c55e;
+      color:#22c55e;
+    }
+    .alert-error{
+      background:rgba(239,68,68,0.2);
+      border:1px solid #ef4444;
+      color:#ef4444;
+    }
+    /* Footer */
+    .footer{background:#0E0E10; color:#fff; padding:28px 0; margin-top:28px}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">DATAPROTECT</a>
+      <nav class="nav">
+        <div class="nav-center">
+          <a href="index.html">Home</a>
+          <a href="challenges.html">Challenges</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </div>
+        <div class="nav-actions" id="nav-actions">
+          <a class="btn btn-ghost" href="login.html">Sign in</a>
+          <a class="btn btn-primary" href="register.html">Get started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header" id="challenge-header">
+    <div class="container">
+      <a href="challenges.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to challenges
+      </a>
+      <h1 id="challenge-title">Loading...</h1>
+      <div class="meta" id="challenge-meta"></div>
+    </div>
+  </section>
+
+  <!-- Challenge Content -->
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2><i class="fas fa-info-circle"></i> Description</h2>
+        <p id="challenge-description">Loading...</p>
+      </div>
+
+      <div class="card">
+        <h2><i class="fas fa-server"></i> Machine</h2>
+        <div id="machine-controls">
+          <p style="color:var(--muted)">Loading...</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><i class="fas fa-flag"></i> Submit Flag</h2>
+        <div id="flag-section">
+          <p style="color:var(--muted)">Please login to submit flags</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container" style="text-align:center">
+      <p class="muted">&copy; 2025 dataprotect</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script>
+    let challenge = null;
+    let machineStatus = null;
+    let timerInterval = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const challengeId = urlParams.get('id');
+
+    // Update navigation
+    function updateNav() {
+      const navActions = document.getElementById('nav-actions');
+      if (api.isAuthenticated()) {
+        const user = api.getCurrentUser();
+        navActions.innerHTML = `<span style="color:var(--muted)">Hi, ${user.username}</span> <a href="#" onclick="handleLogout()" style="color:#fff">Logout</a>`;
+      } else {
+        navActions.innerHTML = `<a class="btn btn-ghost" href="login.html">Sign in</a> <a class="btn btn-primary" href="register.html">Get started</a>`;
+      }
+    }
+
+    // Load challenge
+    async function loadChallenge() {
+      if (!challengeId) {
+        document.getElementById('challenge-title').textContent = 'Challenge not found';
+        return;
+      }
+
+      // Check if user is authenticated
+      if (!api.isAuthenticated()) {
+        document.getElementById('challenge-title').textContent = 'Login Required';
+        document.getElementById('challenge-meta').innerHTML = '';
+        document.getElementById('challenge-description').innerHTML = `
+          <div style="text-align: center; padding: 40px 20px;">
+            <i class="fas fa-lock" style="font-size: 48px; color: var(--red); margin-bottom: 20px;"></i>
+            <h3 style="margin-bottom: 10px;">Please sign in to access this challenge</h3>
+            <p style="color: var(--muted); margin-bottom: 20px;">You must be logged in to view challenge details and start machines</p>
+            <a href="login.html" class="btn btn-primary">Sign in</a>
+            <a href="register.html" class="btn btn-ghost" style="margin-left: 10px;">Create account</a>
+          </div>
+        `;
+        document.getElementById('machine-controls').innerHTML = '';
+        document.getElementById('flag-section').innerHTML = '';
+        return;
+      }
+
+      try {
+        const data = await api.getChallenge(challengeId);
+        challenge = data.challenge;
+        renderChallenge();
+        
+        if (api.isAuthenticated()) {
+          checkMachineStatus();
+          renderFlagSection();
+        }
+      } catch (error) {
+        console.error('Error loading challenge:', error);
+        document.getElementById('challenge-title').textContent = 'Failed to load challenge';
+      }
+    }
+
+    // Render challenge
+    function renderChallenge() {
+      const diffClass = challenge.difficulty === 'Easy' ? 'badge-easy' : 
+                       challenge.difficulty === 'Medium' ? 'badge-medium' : 'badge-hard';
+      
+      document.getElementById('challenge-title').textContent = challenge.title;
+      document.getElementById('challenge-meta').innerHTML = `
+        <span class="badge ${diffClass}">${challenge.difficulty}</span>
+        <span style="color:#fff; font-size:16px">${challenge.points} points</span>
+        <span style="color:var(--red); font-size:16px">${challenge.category_name || 'Uncategorized'}</span>
+      `;
+      document.getElementById('challenge-description').textContent = challenge.description;
+    }
+
+    // Check machine status
+    async function checkMachineStatus() {
+      try {
+        const data = await api.getMachineStatus(challengeId);
+        machineStatus = data.machine;
+        renderMachineControls();
+        
+        if (machineStatus) {
+          startTimer();
+        }
+      } catch (error) {
+        console.error('Error checking machine status:', error);
+        renderMachineControls();
+      }
+    }
+
+    // Render machine controls
+    function renderMachineControls() {
+      const controls = document.getElementById('machine-controls');
+      
+      if (!api.isAuthenticated()) {
+        controls.innerHTML = '<p style="color:var(--muted)">Please <a href="login.html">login</a> to start machines</p>';
+        return;
+      }
+
+      if (!machineStatus) {
+        controls.innerHTML = `
+          <p style="color:var(--muted); margin-bottom:16px">Start a machine instance to begin this challenge</p>
+          <button class="btn btn-primary" onclick="startMachine()">
+            <i class="fas fa-play"></i> Start Machine
+          </button>
+        `;
+      } else {
+        controls.innerHTML = `
+          <div class="machine-status">
+            <div>
+              <strong>Machine IP:</strong> <span class="machine-ip">${machineStatus.machine_ip}</span>
+            </div>
+            <div>
+              <strong>Time remaining:</strong> <span class="timer" id="timer">--:--</span>
+            </div>
+          </div>
+          <button class="btn btn-ghost" onclick="stopMachine()">
+            <i class="fas fa-stop"></i> Stop Machine
+          </button>
+        `;
+      }
+    }
+
+    // Start machine
+    async function startMachine() {
+      const btn = event.target.closest('button');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Starting...';
+
+      try {
+        const data = await api.startMachine(challengeId);
+        machineStatus = data.machine;
+        renderMachineControls();
+        startTimer();
+      } catch (error) {
+        alert('Failed to start machine: ' + (error.message || 'Unknown error'));
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-play"></i> Start Machine';
+      }
+    }
+
+    // Stop machine
+    async function stopMachine() {
+      if (!confirm('Are you sure you want to stop this machine?')) return;
+
+      try {
+        await api.stopMachine(machineStatus.id);
+        machineStatus = null;
+        if (timerInterval) clearInterval(timerInterval);
+        renderMachineControls();
+      } catch (error) {
+        alert('Failed to stop machine: ' + (error.message || 'Unknown error'));
+      }
+    }
+
+    // Start timer
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      
+      timerInterval = setInterval(() => {
+        if (!machineStatus) return;
+        
+        const startTime = new Date(machineStatus.started_at).getTime();
+        const timeoutMs = (machineStatus.timeout_minutes || 60) * 60 * 1000;
+        const endTime = startTime + timeoutMs;
+        const now = Date.now();
+        const remaining = Math.max(0, endTime - now);
+        
+        if (remaining === 0) {
+          clearInterval(timerInterval);
+          machineStatus = null;
+          renderMachineControls();
+          return;
+        }
+        
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        const timerEl = document.getElementById('timer');
+        if (timerEl) {
+          timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+
+    // Render flag section
+    function renderFlagSection() {
+      document.getElementById('flag-section').innerHTML = `
+        <div class="input-group">
+          <input type="text" id="flag-input" placeholder="FLAG{...}" />
+          <button class="btn btn-primary" onclick="submitFlag()">
+            <i class="fas fa-paper-plane"></i> Submit
+          </button>
+        </div>
+        <div id="flag-result"></div>
+      `;
+    }
+
+    // Submit flag
+    async function submitFlag() {
+      const input = document.getElementById('flag-input');
+      const flag = input.value.trim();
+      const resultDiv = document.getElementById('flag-result');
+
+      if (!flag) {
+        resultDiv.innerHTML = '<div class="alert alert-error"><i class="fas fa-times-circle"></i> Please enter a flag</div>';
+        return;
+      }
+
+      try {
+        const data = await api.submitFlag(challengeId, flag);
+        
+        if (data.correct) {
+          resultDiv.innerHTML = `
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle"></i> Correct! You earned ${data.points} points!
+            </div>
+          `;
+          input.value = '';
+          
+          setTimeout(() => {
+            window.location.href = 'challenges.html';
+          }, 2000);
+        } else {
+          resultDiv.innerHTML = '<div class="alert alert-error"><i class="fas fa-times-circle"></i> Incorrect flag. Try again!</div>';
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="alert alert-error">${error.message || 'Submission failed'}</div>`;
+      }
+    }
+
+    // Logout
+    window.handleLogout = function() {
+      api.logout();
+      window.location.href = 'index.html';
+    };
+
+    // Init
+    updateNav();
+    loadChallenge();
+  </script>
+</body>
+</html>

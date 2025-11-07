@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>All Challenges - DATAPROTECT</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --red-050:#F7D4D8;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+      --focus:#0B5FFF;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--snow);
+      line-height:1.5;
+    }
+    a{color:var(--red); text-decoration:none}
+    .container{max-width:1120px; margin:0 auto; padding:0 20px}
+    /* Header */
+    .header{
+      background:var(--onyx);
+      color:var(--white);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+    .header-inner{
+      display:grid; grid-template-columns:auto 1fr; align-items:center;
+      padding:14px 0; column-gap:20px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:0; color:var(--white); font-weight:700;
+      font-family:'Russo One', sans-serif; font-size:24px;
+    }
+    .nav{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:18px; width:100%}
+    .nav-center{display:flex; gap:72px; justify-content:center}
+    .nav-actions{display:flex; gap:12px; justify-content:flex-end}
+    .nav a{color:#fff; opacity:1}
+    .nav a:hover{opacity:1; text-decoration:underline}
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid transparent;
+      font-weight:600; transition:all .15s ease; cursor:pointer;
+    }
+    .btn-primary{background:var(--red); color:#fff; border-color:var(--red)}
+    .btn-primary:hover{background:var(--red-700); border-color:var(--red-700)}
+    .btn-ghost{background:transparent; color:#fff; border-color:#fff}
+    .btn-ghost:hover{background:rgba(255,255,255,.08)}
+    /* Page Header */
+    .page-header{
+      background:var(--onyx);
+      color:#fff;
+      padding:60px 0 40px;
+    }
+    .page-header h1{
+      font-size:42px;
+      font-family:'Russo One', sans-serif;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      margin:0 0 10px;
+      text-shadow:0 0 6px rgba(215,38,61,.6), 0 0 18px rgba(215,38,61,.35);
+    }
+    .page-header p{color:#EDEDEF; margin:0}
+    /* Filters */
+    .section{padding:36px 0}
+    .filters{
+      display:flex;
+      gap:12px;
+      margin-bottom:24px;
+      flex-wrap:wrap;
+    }
+    .filter-btn{
+      padding:10px 18px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .filter-btn:hover, .filter-btn.active{
+      background:var(--red);
+      color:#fff;
+      border-color:var(--red);
+    }
+    /* Grid */
+    .grid{display:grid; gap:14px}
+    .grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media (max-width: 1024px){ .grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width: 640px){ .grid.cols-4{grid-template-columns:1fr}}
+    /* Cards */
+    .card{
+      background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      will-change:transform; position:relative; overflow:hidden; cursor:pointer;
+    }
+    .card:hover{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,.25); border-color:var(--red)}
+    .card:after{content:""; position:absolute; inset:auto 0 0 0; height:3px; background:linear-gradient(90deg, rgba(215,38,61,.8), rgba(179,30,49,.8)); opacity:.9}
+    .card .title{font-weight:700; margin-bottom:6px; font-size:18px}
+    .card .meta{color:var(--muted); margin-bottom:10px; display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .card .desc{color:var(--muted); font-size:14px; line-height:1.6}
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+    .badge-easy{background:#22c55e; color:#000}
+    .badge-medium{background:#f59e0b; color:#000}
+    .badge-hard{background:#ef4444; color:#fff}
+    /* Footer */
+    .footer{background:#0E0E10; color:#fff; padding:28px 0; margin-top:28px}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">DATAPROTECT</a>
+      <nav class="nav">
+        <div class="nav-center">
+          <a href="index.html">Home</a>
+          <a href="challenges.html">Challenges</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </div>
+        <div class="nav-actions" id="nav-actions">
+          <a class="btn btn-ghost" href="login.html">Sign in</a>
+          <a class="btn btn-primary" href="register.html">Get started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>All Challenges</h1>
+      <p>Browse all available CTF challenges</p>
+    </div>
+  </section>
+
+  <!-- Challenges -->
+  <section class="section">
+    <div class="container">
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Easy">Easy</button>
+        <button class="filter-btn" data-filter="Medium">Medium</button>
+        <button class="filter-btn" data-filter="Hard">Hard</button>
+      </div>
+
+      <div class="grid cols-4" id="challenges-grid">
+        <div class="card">
+          <div class="title">Loading...</div>
+          <div class="meta">Please wait</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container" style="text-align:center">
+      <p class="muted">&copy; 2025 dataprotect</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script>
+    let allChallenges = [];
+    let currentFilter = 'all';
+
+    // Update navigation
+    function updateNav() {
+      const navActions = document.getElementById('nav-actions');
+      if (api.isAuthenticated()) {
+        const user = api.getCurrentUser();
+        navActions.innerHTML = `<span style="color:var(--muted)">Hi, ${user.username}</span> <a href="#" onclick="handleLogout()" style="color:#fff">Logout</a>`;
+      } else {
+        navActions.innerHTML = `<a class="btn btn-ghost" href="login.html">Sign in</a> <a class="btn btn-primary" href="register.html">Get started</a>`;
+      }
+    }
+
+    // Load challenges
+    async function loadChallenges() {
+      const grid = document.getElementById('challenges-grid');
+      
+      try {
+        const data = await api.getChallenges();
+        allChallenges = data.challenges || [];
+        renderChallenges();
+      } catch (error) {
+        console.error('Error loading challenges:', error);
+        grid.innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px">Failed to load challenges</p>';
+      }
+    }
+
+    // Render challenges
+    function renderChallenges() {
+      const grid = document.getElementById('challenges-grid');
+      
+      let filtered = allChallenges;
+      if (currentFilter !== 'all') {
+        filtered = allChallenges.filter(ch => ch.difficulty === currentFilter);
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px">No challenges found</p>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(ch => {
+        const diffClass = ch.difficulty === 'Easy' ? 'badge-easy' : 
+                         ch.difficulty === 'Medium' ? 'badge-medium' : 'badge-hard';
+        return `
+          <div class="card" onclick="window.location.href='challenge.html?id=${ch.id}'">
+            <div class="title">${ch.title}</div>
+            <div class="meta">
+              <span class="badge ${diffClass}">${ch.difficulty}</span>
+              <span>${ch.points} points</span>
+              <span style="color:var(--red)">${ch.category_name || 'Uncategorized'}</span>
+            </div>
+            <div class="desc">${ch.description.substring(0, 120)}...</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderChallenges();
+      });
+    });
+
+    // Logout
+    window.handleLogout = function() {
+      api.logout();
+      window.location.href = 'index.html';
+    };
+
+    // Init
+    updateNav();
+    loadChallenges();
+  </script>
+</body>
+</html>

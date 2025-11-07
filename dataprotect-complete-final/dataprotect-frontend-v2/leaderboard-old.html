@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Leaderboard - DATAPROTECT</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:Inter, system-ui, sans-serif;
+      background:var(--onyx);
+      color:var(--white);
+      line-height:1.6;
+    }
+    .navbar{
+      background:rgba(26,26,29,0.95);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      padding:1rem 2rem;
+      position:sticky;
+      top:0;
+      z-index:100;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .logo{
+      font-family:'Russo One', sans-serif;
+      font-size:24px;
+      color:var(--red);
+      text-decoration:none;
+    }
+    .nav-links{
+      display:flex;
+      gap:2rem;
+      align-items:center;
+    }
+    .nav-links a{
+      color:var(--white);
+      text-decoration:none;
+      font-weight:500;
+      transition:color .2s;
+    }
+    .nav-links a:hover{
+      color:var(--red);
+    }
+    .container{
+      max-width:1000px;
+      margin:0 auto;
+      padding:3rem 2rem;
+    }
+    h1{
+      font-family:'Russo One', sans-serif;
+      font-size:48px;
+      margin-bottom:1rem;
+    }
+    .leaderboard-table{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px;
+      overflow:hidden;
+      margin-top:2rem;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+    thead{
+      background:rgba(255,255,255,0.1);
+    }
+    th{
+      padding:1.5rem;
+      text-align:left;
+      font-weight:700;
+      text-transform:uppercase;
+      font-size:14px;
+      letter-spacing:0.5px;
+    }
+    td{
+      padding:1.5rem;
+      border-top:1px solid rgba(255,255,255,0.1);
+    }
+    tbody tr{
+      transition:background .2s;
+    }
+    tbody tr:hover{
+      background:rgba(255,255,255,0.05);
+    }
+    .rank-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.1);
+      font-weight:700;
+      font-size:18px;
+    }
+    .rank-1{
+      background:linear-gradient(135deg, #FFD700, #FFA500);
+      color:#000;
+    }
+    .rank-2{
+      background:linear-gradient(135deg, #C0C0C0, #808080);
+      color:#000;
+    }
+    .rank-3{
+      background:linear-gradient(135deg, #CD7F32, #8B4513);
+      color:#fff;
+    }
+    .loading{
+      text-align:center;
+      padding:4rem;
+      color:var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">DATAPROTECT</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <div id="nav-actions"></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Leaderboard</h1>
+    <p style="color:var(--muted); font-size:18px">Top players ranked by points</p>
+
+    <div class="leaderboard-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Points</th>
+            <th>Challenges Solved</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr>
+            <td colspan="4" class="loading">
+              <i class="fas fa-spinner fa-spin fa-2x"></i>
+              <p>Loading leaderboard...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    // Update navigation
+    function updateNav() {
+      const navActions = document.getElementById('nav-actions');
+      if (api.isAuthenticated()) {
+        const user = api.getCurrentUser();
+        navActions.innerHTML = `<span style="color:var(--muted)">Hi, ${user.username}</span> <a href="#" onclick="handleLogout()">Logout</a>`;
+      } else {
+        navActions.innerHTML = `<a href="login.html">Sign in</a> <a href="register.html" style="background:var(--red); padding:0.5rem 1rem; border-radius:8px">Get started</a>`;
+      }
+    }
+
+    // Load leaderboard
+    async function loadLeaderboard() {
+      try {
+        const data = await api.getLeaderboard(100);
+        const leaderboard = data.leaderboard || [];
+        
+        const tbody = document.getElementById('leaderboard-body');
+        
+        if (leaderboard.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="loading">No players yet</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = leaderboard.map((player, index) => {
+          const rank = index + 1;
+          const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+          return `
+            <tr>
+              <td><span class="rank-badge ${rankClass}">${rank}</span></td>
+              <td><strong>${player.username}</strong></td>
+              <td>${player.total_points || 0}</td>
+              <td>${player.challenges_solved || 0}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        document.getElementById('leaderboard-body').innerHTML = '<tr><td colspan="4" class="loading">Failed to load leaderboard</td></tr>';
+      }
+    }
+
+    // Logout
+    window.handleLogout = function() {
+      api.logout();
+      window.location.href = 'index.html';
+    };
+
+    // Init
+    updateNav();
+    loadLeaderboard();
+  </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Category - DATAPROTECT</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --red-050:#F7D4D8;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+      --focus:#0B5FFF;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--snow);
+      line-height:1.5;
+      padding-top:70px;
+    }
+    a{color:var(--red); text-decoration:none}
+    a:focus{outline:3px solid var(--focus); outline-offset:2px}
+    .container{max-width:1120px; margin:0 auto; padding:0 20px}
+    /* Header */
+    .header{
+      background:var(--onyx);
+      color:var(--white);
+      position:fixed;
+      top:0; left:0; right:0;
+      width:100%;
+      z-index:100;
+      box-shadow:0 2px 10px rgba(0,0,0,.3);
+    }
+    .header-inner{
+      display:grid; grid-template-columns:auto 1fr; align-items:center;
+      padding:14px 0; column-gap:20px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:0; color:var(--white); font-weight:700;
+      font-family:'Russo One', sans-serif; font-size:24px;
+    }
+    .nav{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:18px; width:100%}
+    .nav-center{display:flex; gap:72px; justify-content:center}
+    .nav-actions{display:flex; gap:12px; justify-content:flex-end}
+    .nav a{color:#fff; opacity:1}
+    .nav a:hover{opacity:1; text-decoration:underline}
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid transparent;
+      font-weight:600; transition:all .15s ease; cursor:pointer;
+    }
+    .btn-primary{background:var(--red); color:#fff; border-color:var(--red)}
+    .btn-primary:hover{background:var(--red-700); border-color:var(--red-700)}
+    .btn-ghost{background:transparent; color:#fff; border-color:#fff}
+    .btn-ghost:hover{background:rgba(255,255,255,.08)}
+    /* Page Header */
+    .page-header{
+      background:linear-gradient(135deg, var(--onyx) 0%, var(--ink) 100%);
+      color:#fff;
+      padding:40px 0 30px;
+      margin-bottom:30px;
+    }
+    .page-header h1{
+      font-size:36px;
+      margin:0 0 8px;
+      font-family:'Russo One', sans-serif;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+    .page-header p{
+      color:#EDEDEF;
+      margin:0;
+      font-size:16px;
+    }
+    .category-icon{
+      font-size:48px;
+      color:var(--red);
+      margin-bottom:12px;
+    }
+    /* Section */
+    .section{padding:36px 0}
+    .section h2{font-size:24px; margin:0 0 20px}
+    /* Grid */
+    .grid{display:grid; gap:18px}
+    .grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media (max-width: 1024px){ .grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width: 640px){ .grid.cols-4{grid-template-columns:1fr}}
+    /* Cards */
+    .card{
+      background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      will-change:transform; position:relative; overflow:hidden; cursor:pointer;
+    }
+    .card:hover{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,.25); border-color:var(--red)}
+    .card:after{content:""; position:absolute; inset:auto 0 0 0; height:3px; background:linear-gradient(90deg, rgba(215,38,61,.8), rgba(179,30,49,.8)); opacity:.9}
+    .card .title{font-weight:700; margin-bottom:6px; font-size:18px}
+    .card .meta{color:var(--muted); margin-bottom:10px; display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .card .desc{color:var(--muted); font-size:14px; line-height:1.6}
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+    .badge-easy{background:#22c55e; color:#000}
+    .badge-medium{background:#f59e0b; color:#000}
+    .badge-hard{background:#ef4444; color:#fff}
+    /* Footer */
+    .footer{background:#0E0E10; color:#fff; padding:28px 0; margin-top:50px}
+    .muted{color:var(--muted)}
+    /* Empty State */
+    .empty-state{
+      text-align:center;
+      padding:60px 20px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:10px;
+    }
+    .empty-state i{
+      font-size:48px;
+      color:var(--muted);
+      margin-bottom:16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">DATAPROTECT</a>
+      <nav class="nav">
+        <div class="nav-center">
+          <a href="index.html">Home</a>
+          <a href="challenges.html">Challenges</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </div>
+        <div class="nav-actions" id="nav-actions"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="category-icon" id="category-icon">
+        <i class="fas fa-folder"></i>
+      </div>
+      <h1 id="category-name">Loading...</h1>
+      <p id="category-description"></p>
+    </div>
+  </div>
+
+  <!-- Challenges -->
+  <section class="section">
+    <div class="container">
+      <h2>Challenges</h2>
+      <div class="grid cols-4" id="challenges-grid">
+        <p class="muted">Loading challenges...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container" style="text-align:center">
+      <p class="muted">&copy; 2025 dataprotect</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script>
+    // Get category slug from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const categorySlug = urlParams.get('slug');
+    let category = null;
+
+    // Update navigation
+    function updateNav() {
+      const navActions = document.getElementById('nav-actions');
+      if (api.isAuthenticated()) {
+        const user = api.getCurrentUser();
+        navActions.innerHTML = `<span style="color:#fff">Hi, ${user.username}</span> <a href="#" onclick="handleLogout()" style="color:#fff">Logout</a>`;
+      } else {
+        navActions.innerHTML = `<a class="btn btn-ghost" href="login.html">Sign in</a> <a class="btn btn-primary" href="register.html">Get started</a>`;
+      }
+    }
+
+    // Load category and challenges
+    async function loadCategory() {
+      if (!categorySlug) {
+        document.getElementById('category-name').textContent = 'Category not found';
+        document.getElementById('challenges-grid').innerHTML = '<p class="muted">Invalid category</p>';
+        return;
+      }
+
+      try {
+        // Load category info
+        const catData = await api.getCategoryBySlug(categorySlug);
+        category = catData.category;
+        
+        document.getElementById('category-name').textContent = category.name;
+        document.getElementById('category-description').textContent = category.description || '';
+        document.getElementById('category-icon').innerHTML = `<i class="fas ${category.icon || 'fa-folder'}"></i>`;
+
+        // Load challenges for this category
+        const chData = await api.getChallengesByCategory(categorySlug);
+        const challenges = chData.challenges || [];
+
+        const grid = document.getElementById('challenges-grid');
+        
+        if (challenges.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+              <i class="fas fa-inbox"></i>
+              <h3>No challenges yet</h3>
+              <p class="muted">Check back later for new challenges in this category</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = challenges.map(ch => {
+          const diffClass = ch.difficulty === 'Easy' ? 'badge-easy' : 
+                           ch.difficulty === 'Medium' ? 'badge-medium' : 'badge-hard';
+          return `
+            <div class="card" onclick="window.location.href='challenge.html?id=${ch.id}'">
+              <div class="title">${ch.title}</div>
+              <div class="meta">
+                <span class="badge ${diffClass}">${ch.difficulty}</span>
+                ${ch.points} points
+              </div>
+              <p class="desc">${ch.description.substring(0, 100)}...</p>
+            </div>
+          `;
+        }).join('');
+
+      } catch (error) {
+        console.error('Error loading category:', error);
+        document.getElementById('category-name').textContent = 'Failed to load category';
+        document.getElementById('challenges-grid').innerHTML = '<p class="muted">Failed to load challenges</p>';
+      }
+    }
+
+    // Logout function
+    window.handleLogout = function() {
+      api.logout();
+      window.location.href = 'index.html';
+    };
+
+    // Initialize
+    updateNav();
+    loadCategory();
+  </script>
+</body>
+</html>

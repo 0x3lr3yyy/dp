@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign Up - DATAPROTECT</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root{
+      --red:#D7263D;
+      --red-700:#B31E31;
+      --ink:#0E0E10;
+      --onyx:#1A1A1D;
+      --white:#FFFFFF;
+      --snow:#F7F7F8;
+      --border:#E6E6EA;
+      --muted:#6B6B75;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0; height:100%}
+    body{
+      font-family:'Russo One', Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--onyx);
+      line-height:1.5;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .login-container{
+      background:#fff;
+      border-radius:12px;
+      padding:40px;
+      max-width:400px;
+      width:100%;
+      box-shadow:0 20px 60px rgba(0,0,0,.3);
+    }
+    .logo{
+      text-align:center;
+      margin-bottom:30px;
+    }
+    .logo i{
+      font-size:48px;
+      color:var(--red);
+    }
+    .logo h1{
+      margin:10px 0 0;
+      font-size:24px;
+      color:var(--ink);
+    }
+    .form-group{
+      margin-bottom:20px;
+    }
+    .form-group label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:600;
+      color:var(--ink);
+    }
+    .form-group input{
+      width:100%;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-size:14px;
+      font-family:Inter, sans-serif;
+    }
+    .form-group input:focus{
+      outline:none;
+      border-color:var(--red);
+    }
+    .btn{
+      width:100%;
+      padding:14px;
+      background:var(--red);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+      transition:background .2s ease;
+    }
+    .btn:hover{
+      background:var(--red-700);
+    }
+    .btn:disabled{
+      background:var(--muted);
+      cursor:not-allowed;
+    }
+    .error{
+      background:#f8d7da;
+      color:#721c24;
+      padding:12px;
+      border-radius:8px;
+      margin-bottom:20px;
+      font-size:14px;
+    }
+    .link{
+      text-align:center;
+      margin-top:20px;
+      color:var(--muted);
+    }
+    .link a{
+      color:var(--red);
+      text-decoration:none;
+      font-weight:600;
+    }
+    .link a:hover{
+      text-decoration:underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <i class="fas fa-shield-alt"></i>
+      <h1>DATAPROTECT</h1>
+      <p style="color:var(--muted); font-size:14px; margin:5px 0 0">Create your account</p>
+    </div>
+
+    <div id="error-message" class="error" style="display:none"></div>
+
+    <form id="register-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autocomplete="username" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="new-password" minlength="6" />
+      </div>
+
+      <button type="submit" class="btn" id="submit-btn">Sign Up</button>
+    </form>
+
+    <div class="link">
+      Already have an account? <a href="login.html">Sign in</a>
+    </div>
+    <div class="link">
+      <a href="index.html">← Back to home</a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    const form = document.getElementById('register-form');
+    const errorDiv = document.getElementById('error-message');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !email || !password) {
+        showError('Please fill in all fields');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('Password must be at least 6 characters');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating account...';
+      errorDiv.style.display = 'none';
+
+      try {
+        await api.register(username, email, password);
+        window.location.href = 'challenges.html';
+      } catch (error) {
+        showError(error.message || 'Registration failed. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign Up';
+      }
+    });
+
+    function showError(message) {
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+    }
+
+    // Redirect if already logged in
+    if (api.isAuthenticated()) {
+      window.location.href = 'challenges.html';
+    }
+  </script>
+</body>
+</html>
